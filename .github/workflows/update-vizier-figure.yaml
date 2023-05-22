@@ -1,0 +1,37 @@
+name: update-vizier-figure
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Who triggered this build (enter github username to tag yourself)?'
+        required: true
+        default: 'weekly run'
+  schedule:
+  # runs every monday at midnight
+    - cron: '0 0 * * 1'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: action/checkout@v3
+      - name: set up python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+      - name: install requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r ./episodes/images/vizier_stats/requirements.txt
+      - name: generate figure
+        env:
+          ADS_API_KEY: ${{ secrets.ADS_API_KEY }}
+        run: |
+          cd ../../episodes/images/vizier_stats
+          python -m vizier_stats.py ${{ env.ADS_API_KEY }}
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add --all
+          git commit -m "update vizier figure"
+          git push
