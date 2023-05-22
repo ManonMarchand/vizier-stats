@@ -128,8 +128,8 @@ def plot_pie_chart(today: str, number_of_catalogs: int, count_per_journal, cut):
 
     # create column for journal families 
     principal_journal = {
-        "Astronomy and Astrophysics": "Astronomy & Astrophysics Journal",
-        "Astronomy and Astrophysics Supplement Series": "Astronomy & Astrophysics Journal",
+        "Astronomy and Astrophysics": "Astronomy & Astrophysics Journals",
+        "Astronomy and Astrophysics Supplement Series": "Astronomy & Astrophysics Journals",
         "The Astronomical Journal": "American Astronomical Society Journals",
         "The Astrophysical Journal": "American Astronomical Society Journals",
         "The Astrophysical Journal Supplement Series": "American Astronomical Society Journals",
@@ -144,10 +144,18 @@ def plot_pie_chart(today: str, number_of_catalogs: int, count_per_journal, cut):
         path=["journal name", "sub journal name"],
         title=f"Provenance of the {number_of_catalogs} catalogs in VizieR ({today})",
         color_discrete_sequence=px.colors.qualitative.Pastel,
-        hover_name="journal name",
     )
+
+    invert_journal_names = {v: k for k, v in journal_names.items()}
+    invert_journal_names.update({"American Astronomical Society Journals": "AAS Journals", "Astronomy & Astrophysics Journals": "A&A Journals"})
+
     fig.update_traces(hovertemplate='<b>%{label}</b><br>Number of catalogs: %{value}')  # parent, or label, or id, or value
-    fig.update_traces(textinfo="label+percent entry")
+    print(fig.data[0])
+    
+    short_label = np.array([invert_journal_names[label] for label in fig.data[0]["labels"] ], dtype=object)
+
+    fig.update_traces(texttemplate="<b>" + short_label + "</b><br>%{percentEntry}")
+    fig.update_traces(legendrank=100, selector=dict(type='sunburst'))
     fig.update_layout(margin = dict(t=50, l=0, r=0, b=0))
     fig.write_html("index.html")
 
@@ -155,6 +163,8 @@ def plot_pie_chart(today: str, number_of_catalogs: int, count_per_journal, cut):
 def main(ads_api_key):
     # queries VizieR for its metadata catalog
     metadata = query_vizier_for_metadata_of_catalogs()
+    #metadata.to_pickle("metadata.pkl")
+    #metadata = pd.read_pickle("metadata.pkl")
     # number of records today
     todays_number_of_catalogs = len(metadata)
     # threshold on number of catalogs from a same journal
