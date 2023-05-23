@@ -169,7 +169,7 @@ def main(ads_api_key):
     todays_number_of_catalogs = len(metadata)
     # threshold on number of catalogs from a same journal
     # only keep above cut
-    cut = 50
+    cut = 250
     # a dataframe containing journal short id and corresponding catalog count
     counts_per_journals = get_count_for_journals(metadata, cut)
     # updates the list of journal names if needed by querying the ADS API
