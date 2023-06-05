@@ -28,7 +28,7 @@ jobs:
         env:
           ADS_API_KEY: ${{ secrets.ADS_API_KEY }}
         run: |
-          python -m vizier_stats.py ${{ env.ADS_API_KEY }}
+          python vizier_stats.py ${{ env.ADS_API_KEY }}
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add --all
