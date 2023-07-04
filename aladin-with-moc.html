@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <!-- insert this snippet where you want Aladin Lite viewer to appear -->
+    <div id="aladin-lite-div"></div>
+    <script type="text/javascript" src="https://aladin.cds.unistra.fr/AladinLite/api/v3/latest/aladin.js" charset="utf-8"></script>
+    <script type="text/javascript">
+    let aladin;
+    A.init.then(() => {
+    aladin = A.aladin('#aladin-lite-div', {target: '00 00 00 +07 00 00', fov: 180, projection: 'AIT', survey: 'P/Mellinger/color'});
+    var moc = A.MOCFromURL('https://alasky.unistra.fr/MocServer/query?ivorn=ivo%3A%2F%2FCDS%2FV%2F139%2Fsdss9&get=moc&order=7&fmt=fits', {color: 'hotpink', lineWidth: 1});
+    aladin.addMOC(moc);
+});
+    </script>
+  </body>
+</html>
