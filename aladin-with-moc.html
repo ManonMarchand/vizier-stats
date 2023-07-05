@@ -11,9 +11,10 @@
     <script type="text/javascript">
     let aladin;
     A.init.then(() => {
-    aladin = A.aladin('#aladin-lite-div', {target: '00 00 00 +07 00 00', fov: 180, projection: 'AIT', survey: 'P/Mellinger/color'});
+    aladin = A.aladin('#aladin-lite-div', {target: '00 00 00 +07 00 00', fov: 180, projection: 'SIN', survey: 'P/Mellinger/color', fullScreen: true, showCooGridControl: true, showSimbadPointerControl: true, showContextMenu: true});
     var moc = A.MOCFromURL('https://alasky.unistra.fr/MocServer/query?ivorn=ivo%3A%2F%2FCDS%2FV%2F139%2Fsdss9&get=moc&order=7&fmt=fits', {color: 'hotpink', lineWidth: 1});
     aladin.addMOC(moc);
+    aladin.addCatalog(A.catalogFromVizieR('J/AJ/159/154/table3', '0 +0', 180, {onClick: 'showTable'}));
 });
     </script>
   </body>
