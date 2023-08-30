@@ -9,12 +9,12 @@ import pyvo
 import requests
 
 
-number_catalogs = "number of catalogs"
+number_catalogs = "number of catalogues"
 journal_names_json_file = "journal_names.json"
 
 
 def query_vizier_for_metadata_of_catalogs():
-    """Query the metadata catalog from VizieR.
+    """Query the metadata catalogue from VizieR.
 
     It returns it as a pandas DataFrame
     """
@@ -33,12 +33,12 @@ def get_count_for_journals(metadata, cut: int):
     Arguments
     ---------
 
-    cut (int, optional): Cut for the minimal number of catalogs to
+    cut (int, optional): Cut for the minimal number of catalogues to
                          appear in the graph. Defaults to 50.
 
     Returns
     -------
-        int: total number of catalogs
+        int: total number of catalogues
     """
 
     # cleaning steps
@@ -112,16 +112,16 @@ def get_dict_of_journals_names(count_per_journal, ads_api_key: str):
 
 
 def plot_pie_chart(today: str, number_of_catalogs: int, count_per_journal, cut):
-    """Plot a pie chart for the catalogs provenance in VizieR.
+    """Plot a pie chart for the catalogues provenance in VizieR.
 
     Args:
         today (str): the date of today
-        number_of_catalogs (int): total number of catalogs, as of today
+        number_of_catalogs (int): total number of catalogues, as of today
     """
     # import the data
     with open(journal_names_json_file) as json_data:
         journal_names = json.load(json_data)
-    journal_names.update({"other": f"journals with less than {cut} catalogs"})
+    journal_names.update({"other": f"journals with less than {cut} catalogues"})
 
     # join the dataframe and the dictionnary
     count_per_journal["sub journal name"] = count_per_journal["index"].map(journal_names)
@@ -140,16 +140,16 @@ def plot_pie_chart(today: str, number_of_catalogs: int, count_per_journal, cut):
     # and now plot time!
     fig = px.sunburst(
         count_per_journal,
-        values="number of catalogs",
+        values="number of catalogues",
         path=["journal name", "sub journal name"],
-        title=f"Provenance of the {number_of_catalogs} catalogs in VizieR ({today})",
+        title=f"Provenance of the {number_of_catalogs} catalogues in VizieR ({today})",
         color_discrete_sequence=px.colors.qualitative.Pastel,
     )
 
     invert_journal_names = {v: k for k, v in journal_names.items()}
     invert_journal_names.update({"American Astronomical Society Journals": "AAS Journals", "Astronomy & Astrophysics Journals": "A&A Journals"})
 
-    fig.update_traces(hovertemplate='<b>%{label}</b><br>Number of catalogs: %{value}')  # parent, or label, or id, or value
+    fig.update_traces(hovertemplate='<b>%{label}</b><br>Number of catalogues: %{value}')  # parent, or label, or id, or value
     print(fig.data[0])
     
     short_label = np.array([invert_journal_names[label] for label in fig.data[0]["labels"] ], dtype=object)
