@@ -136,6 +136,7 @@ def plot_pie_chart(today: str, number_of_catalogs: int, count_per_journal, cut):
         "Astronomy and Astrophysics Supplement Series": "Astronomy & Astrophysics Journals",
         "The Astronomical Journal": "American Astronomical Society Journals",
         "The Astrophysical Journal": "American Astronomical Society Journals",
+        "The Astrophysical Journal Letters": "American Astronomical Society Journals",
         "The Astrophysical Journal Supplement Series": "American Astronomical Society Journals",
     }
     count_per_journal["journal name"] = count_per_journal["sub journal name"].replace(principal_journal)
@@ -167,21 +168,21 @@ def plot_pie_chart(today: str, number_of_catalogs: int, count_per_journal, cut):
 def main(ads_api_key):
     # queries VizieR for its metadata catalog
     metadata = query_vizier_for_metadata_of_catalogs()
-    metadata.to_pickle("metadata.pkl")
-    #metadata = pd.read_pickle("metadata.pkl")
+    # metadata.to_pickle("metadata.pkl")
+    # metadata = pd.read_pickle("metadata.pkl")
     # number of records today
-    # todays_number_of_catalogs = len(metadata)
+    todays_number_of_catalogs = len(metadata)
     # threshold on number of catalogs from a same journal
     # only keep above cut
-    # cut = 250
+    cut = 250
     # a dataframe containing journal short id and corresponding catalog count
-    # counts_per_journals = get_count_for_journals(metadata, cut)
+    counts_per_journals = get_count_for_journals(metadata, cut)
     # updates the list of journal names if needed by querying the ADS API
-    # get_dict_of_journals_names(counts_per_journals, ads_api_key)
+    get_dict_of_journals_names(counts_per_journals, ads_api_key)
     # saves the plot as html
-    # plot_pie_chart(
-    #    date.today().isoformat(), todays_number_of_catalogs, counts_per_journals, cut
-    # )
+    plot_pie_chart(
+        date.today().isoformat(), todays_number_of_catalogs, counts_per_journals, cut
+    )
 
 
 if __name__ == "__main__":
