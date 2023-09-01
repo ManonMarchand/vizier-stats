@@ -20,7 +20,7 @@ def query_vizier_for_metadata_of_catalogs():
     """
     tap_vizier = pyvo.dal.TAPService("https://tapvizier.cds.unistra.fr/TAPVizieR/tap/")
     query_meta_catalogs = """
-                          SELECT * FROM METAcat
+                          SELECT name, bibcode FROM METAcat
                           WHERE catid >1
                           """
     meta_catalogs = tap_vizier.search(query_meta_catalogs)
@@ -47,6 +47,10 @@ def get_count_for_journals(metadata, cut: int):
     ]
     journal_code = [code.replace("+", "&") for code in journal_code]
     journal_code = [code.split("(")[0] for code in journal_code]
+    # dirty fix for apjl that has its L far from it in its bib code
+    journal_code = ["ApJL" if (journal_code == "ApJ" and name.split("/")[-1][0] == "L")
+                     else journal_code for journal_code, name 
+                     in zip(journal_code, np.array(metadata["name"]))]
 
     # add column with the counts
     metadata[number_catalogs] = journal_code
@@ -163,21 +167,21 @@ def plot_pie_chart(today: str, number_of_catalogs: int, count_per_journal, cut):
 def main(ads_api_key):
     # queries VizieR for its metadata catalog
     metadata = query_vizier_for_metadata_of_catalogs()
-    #metadata.to_pickle("metadata.pkl")
+    metadata.to_pickle("metadata.pkl")
     #metadata = pd.read_pickle("metadata.pkl")
     # number of records today
-    todays_number_of_catalogs = len(metadata)
+    # todays_number_of_catalogs = len(metadata)
     # threshold on number of catalogs from a same journal
     # only keep above cut
-    cut = 250
+    # cut = 250
     # a dataframe containing journal short id and corresponding catalog count
-    counts_per_journals = get_count_for_journals(metadata, cut)
+    # counts_per_journals = get_count_for_journals(metadata, cut)
     # updates the list of journal names if needed by querying the ADS API
-    get_dict_of_journals_names(counts_per_journals, ads_api_key)
+    # get_dict_of_journals_names(counts_per_journals, ads_api_key)
     # saves the plot as html
-    plot_pie_chart(
-        date.today().isoformat(), todays_number_of_catalogs, counts_per_journals, cut
-    )
+    # plot_pie_chart(
+    #    date.today().isoformat(), todays_number_of_catalogs, counts_per_journals, cut
+    # )
 
 
 if __name__ == "__main__":
