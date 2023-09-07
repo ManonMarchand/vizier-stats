@@ -134,8 +134,6 @@ def plot_pie_chart(today: str, number_of_catalogs: int, count_per_journal, cut):
 
     # create column for journal families 
     principal_journal = {
-        "Astronomy and Astrophysics": "Astronomy & Astrophysics Journals",
-        "Astronomy and Astrophysics Supplement Series": "Astronomy & Astrophysics Journals",
         "The Astronomical Journal": "American Astronomical Society Journals",
         "The Astrophysical Journal": "American Astronomical Society Journals",
         "The Astrophysical Journal Letters": "American Astronomical Society Journals",
