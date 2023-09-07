@@ -48,9 +48,11 @@ def get_count_for_journals(metadata, cut: int):
     journal_code = [code.replace("+", "&") for code in journal_code]
     journal_code = [code.split("(")[0] for code in journal_code]
     # dirty fix for apjl that has its L far from it in its bib code
-    journal_code = ["ApJL" if (journal_code == "ApJ" and name.split("/")[-1][0] == "L")
-                     else journal_code for journal_code, name 
+    journal_code = ["ApJL" if (code == "ApJ" and name.split("/")[-1][0] == "L")
+                     else code for code, name 
                      in zip(journal_code, np.array(metadata["name"]))]
+    # fusion A&A and A&AS because they became the same thing in 2001
+    journal_code = ["A&A" if code=="A&AS" else code for code in journal_code]
 
     # add column with the counts
     metadata[number_catalogs] = journal_code
