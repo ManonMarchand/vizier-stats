@@ -21,7 +21,7 @@ def query_vizier_for_metadata_of_catalogs():
     tap_vizier = pyvo.dal.TAPService("https://tapvizier.cds.unistra.fr/TAPVizieR/tap/")
     query_meta_catalogs = """
                           SELECT name, bibcode FROM METAcat
-                          WHERE catid >1 AND name NOT LIKE 'B*'
+                          WHERE catid >1 AND name NOT LIKE 'B/%'
                           """
     meta_catalogs = tap_vizier.search(query_meta_catalogs)
     return meta_catalogs.to_table().to_pandas()
