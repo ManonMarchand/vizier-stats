@@ -127,7 +127,7 @@ def plot_pie_chart(today: str, number_of_catalogs: int, count_per_journal, cut):
     # import the data
     with open(journal_names_json_file) as json_data:
         journal_names = json.load(json_data)
-    journal_names.update({"other": f"journals with less than {cut} catalogues"})
+    journal_names.update({"other": f"Journals with less than {cut} catalogues and large datasets"})
 
     # join the dataframe and the dictionnary
     count_per_journal["sub journal name"] = count_per_journal["index"].map(journal_names)
