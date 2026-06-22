@@ -3,9 +3,8 @@ from datetime import date
 import json
 
 import numpy as np
-import pandas as pd
 import plotly.express as px
-import pyvo
+from pyvo.dal import TAPService
 import requests
 
 
@@ -18,7 +17,7 @@ def query_vizier_for_metadata_of_catalogs():
 
     It returns it as a pandas DataFrame
     """
-    tap_vizier = pyvo.dal.TAPService("https://tapvizier.cds.unistra.fr/TAPVizieR/tap/")
+    tap_vizier = TAPService("https://tapvizier.cds.unistra.fr/TAPVizieR/tap/")
     query_meta_catalogs = """
                           SELECT name, bibcode FROM METAcat
                           WHERE catid >1 AND name NOT LIKE 'B/%'
@@ -66,7 +65,7 @@ def get_count_for_journals(metadata, cut: int):
     ] = "other"
 
     # exports the counts per journal after groupby
-    count_per_journal = count_journal.groupby("index").sum("journal_code")
+    count_per_journal = count_journal.groupby("index").sum(numeric_only=True)
     count_per_journal.reset_index(inplace=True)
 
     return count_per_journal
